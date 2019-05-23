@@ -1,0 +1,44 @@
+version: '2'
+
+services: 
+  # gas_management_front:
+  #   depends_on:
+  #     - 'gas_management_api'
+  #   image: 'bitnami/node:8'
+  #   command: "sh -c 'npm install && npm run start:dev'"
+  #   volumes:
+  #     - '/Users/chattaponuthum/gasManagement/gas_management_front:/app'
+  #   ports:
+  #     - '8080:8080'
+  #   networks:
+  #     - 'gas_management_network'
+  gas_management_api:
+    depends_on:
+      - 'gas_management_db'
+    image: 'bitnami/node:8'
+    command: "sh -c 'npm install && npm run start'"
+    volumes:
+      - '/Users/chattaponuthum/gasManagement/gas_management_api:/app'
+    ports:
+      - '8082:3000'
+    networks:
+      - 'gas_management_network'
+    environment:
+      - DB_NAME=gas_management_dbname
+      - DB_PORT=3000
+      - DB_HOST=gas_management_db
+      - SECRET=Cyo8nvAdmin
+  gas_management_db:
+    image: 'bitnami/mongodb:latest'
+    ports:
+      - "27017:27017"
+    volumes:
+      - /Users/chattaponuthum/mongovolumn:/bitnami
+    networks:
+      - 'gas_management_network'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+networks:
+  gas_management_network:
+    driver: bridge
